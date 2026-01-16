@@ -1,0 +1,18 @@
+[package]
+name = "gnostic-compiler"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Compiler support library for gnostic-models"
+
+[dependencies]
+yaml-rust2 = { workspace = true }
+reqwest = { workspace = true }
+thiserror = { workspace = true }
+dashmap = { workspace = true }
+once_cell = { workspace = true }
+url = { workspace = true }
+regex = { workspace = true }
+log = "0.4"
+
+[dev-dependencies]

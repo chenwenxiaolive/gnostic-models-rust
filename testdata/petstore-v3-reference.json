@@ -1,0 +1,2362 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Swagger Petstore - OpenAPI 3.0",
+    "description": "This is a sample Pet Store Server based on the OpenAPI 3.0 specification.  You can find out more about\nSwagger at [https://swagger.io](https://swagger.io). In the third iteration of the pet store, we've switched to the design first approach!\nYou can now help us improve the API whether it's by making changes to the definition itself or to the code.\nThat way, with time, we can improve the API in general, and expose some of the new features in OAS3.\n\nSome useful links:\n- [The Pet Store repository](https://github.com/swagger-api/swagger-petstore)\n- [The source API definition for the Pet Store](https://github.com/swagger-api/swagger-petstore/blob/master/src/main/resources/openapi.yaml)",
+    "termsOfService": "https://swagger.io/terms/",
+    "contact": {
+      "email": "apiteam@swagger.io"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0.27"
+  },
+  "servers": [
+    {
+      "url": "/api/v3"
+    }
+  ],
+  "paths": {
+    "path": [
+      {
+        "name": "/pet",
+        "value": {
+          "put": {
+            "tags": [
+              "pet"
+            ],
+            "summary": "Update an existing pet.",
+            "description": "Update an existing pet by Id.",
+            "operationId": "updatePet",
+            "requestBody": {
+              "requestBody": {
+                "description": "Update an existent pet in the store",
+                "content": {
+                  "additionalProperties": [
+                    {
+                      "name": "application/json",
+                      "value": {
+                        "schema": {
+                          "reference": {
+                            "Ref": "#/components/schemas/Pet"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "name": "application/xml",
+                      "value": {
+                        "schema": {
+                          "reference": {
+                            "Ref": "#/components/schemas/Pet"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "name": "application/x-www-form-urlencoded",
+                      "value": {
+                        "schema": {
+                          "reference": {
+                            "Ref": "#/components/schemas/Pet"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "required": true
+              }
+            },
+            "responses": {
+              "default": {
+                "response": {
+                  "description": "Unexpected error"
+                }
+              },
+              "responseOrReference": [
+                {
+                  "name": "200",
+                  "value": {
+                    "response": {
+                      "description": "Successful operation",
+                      "content": {
+                        "additionalProperties": [
+                          {
+                            "name": "application/json",
+                            "value": {
+                              "schema": {
+                                "reference": {
+                                  "Ref": "#/components/schemas/Pet"
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "name": "application/xml",
+                            "value": {
+                              "schema": {
+                                "reference": {
+                                  "Ref": "#/components/schemas/Pet"
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
+                {
+                  "name": "400",
+                  "value": {
+                    "response": {
+                      "description": "Invalid ID supplied"
+                    }
+                  }
+                },
+                {
+                  "name": "404",
+                  "value": {
+                    "response": {
+                      "description": "Pet not found"
+                    }
+                  }
+                },
+                {
+                  "name": "422",
+                  "value": {
+                    "response": {
+                      "description": "Validation exception"
+                    }
+                  }
+                }
+              ]
+            },
+            "security": [
+              {
+                "additionalProperties": [
+                  {
+                    "name": "petstore_auth",
+                    "value": {
+                      "value": [
+                        "write:pets",
+                        "read:pets"
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "post": {
+            "tags": [
+              "pet"
+            ],
+            "summary": "Add a new pet to the store.",
+            "description": "Add a new pet to the store.",
+            "operationId": "addPet",
+            "requestBody": {
+              "requestBody": {
+                "description": "Create a new pet in the store",
+                "content": {
+                  "additionalProperties": [
+                    {
+                      "name": "application/json",
+                      "value": {
+                        "schema": {
+                          "reference": {
+                            "Ref": "#/components/schemas/Pet"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "name": "application/xml",
+                      "value": {
+                        "schema": {
+                          "reference": {
+                            "Ref": "#/components/schemas/Pet"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "name": "application/x-www-form-urlencoded",
+                      "value": {
+                        "schema": {
+                          "reference": {
+                            "Ref": "#/components/schemas/Pet"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "required": true
+              }
+            },
+            "responses": {
+              "default": {
+                "response": {
+                  "description": "Unexpected error"
+                }
+              },
+              "responseOrReference": [
+                {
+                  "name": "200",
+                  "value": {
+                    "response": {
+                      "description": "Successful operation",
+                      "content": {
+                        "additionalProperties": [
+                          {
+                            "name": "application/json",
+                            "value": {
+                              "schema": {
+                                "reference": {
+                                  "Ref": "#/components/schemas/Pet"
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "name": "application/xml",
+                            "value": {
+                              "schema": {
+                                "reference": {
+                                  "Ref": "#/components/schemas/Pet"
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
+                {
+                  "name": "400",
+                  "value": {
+                    "response": {
+                      "description": "Invalid input"
+                    }
+                  }
+                },
+                {
+                  "name": "422",
+                  "value": {
+                    "response": {
+                      "description": "Validation exception"
+                    }
+                  }
+                }
+              ]
+            },
+            "security": [
+              {
+                "additionalProperties": [
+                  {
+                    "name": "petstore_auth",
+                    "value": {
+                      "value": [
+                        "write:pets",
+                        "read:pets"
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "/pet/findByStatus",
+        "value": {
+          "get": {
+            "tags": [
+              "pet"
+            ],
+            "summary": "Finds Pets by status.",
+            "description": "Multiple status values can be provided with comma separated strings.",
+            "operationId": "findPetsByStatus",
+            "parameters": [
+              {
+                "parameter": {
+                  "name": "status",
+                  "in": "query",
+                  "description": "Status values that need to be considered for filter",
+                  "required": true,
+                  "explode": true,
+                  "schema": {
+                    "schema": {
+                      "enum": [
+                        {
+                          "yaml": "available\n"
+                        },
+                        {
+                          "yaml": "pending\n"
+                        },
+                        {
+                          "yaml": "sold\n"
+                        }
+                      ],
+                      "type": "string",
+                      "default": {
+                        "string": "available"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "responses": {
+              "default": {
+                "response": {
+                  "description": "Unexpected error"
+                }
+              },
+              "responseOrReference": [
+                {
+                  "name": "200",
+                  "value": {
+                    "response": {
+                      "description": "successful operation",
+                      "content": {
+                        "additionalProperties": [
+                          {
+                            "name": "application/json",
+                            "value": {
+                              "schema": {
+                                "schema": {
+                                  "type": "array",
+                                  "items": {
+                                    "schemaOrReference": [
+                                      {
+                                        "reference": {
+                                          "Ref": "#/components/schemas/Pet"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "name": "application/xml",
+                            "value": {
+                              "schema": {
+                                "schema": {
+                                  "type": "array",
+                                  "items": {
+                                    "schemaOrReference": [
+                                      {
+                                        "reference": {
+                                          "Ref": "#/components/schemas/Pet"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
+                {
+                  "name": "400",
+                  "value": {
+                    "response": {
+                      "description": "Invalid status value"
+                    }
+                  }
+                }
+              ]
+            },
+            "security": [
+              {
+                "additionalProperties": [
+                  {
+                    "name": "petstore_auth",
+                    "value": {
+                      "value": [
+                        "write:pets",
+                        "read:pets"
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "/pet/findByTags",
+        "value": {
+          "get": {
+            "tags": [
+              "pet"
+            ],
+            "summary": "Finds Pets by tags.",
+            "description": "Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.",
+            "operationId": "findPetsByTags",
+            "parameters": [
+              {
+                "parameter": {
+                  "name": "tags",
+                  "in": "query",
+                  "description": "Tags to filter by",
+                  "required": true,
+                  "explode": true,
+                  "schema": {
+                    "schema": {
+                      "type": "array",
+                      "items": {
+                        "schemaOrReference": [
+                          {
+                            "schema": {
+                              "type": "string"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "responses": {
+              "default": {
+                "response": {
+                  "description": "Unexpected error"
+                }
+              },
+              "responseOrReference": [
+                {
+                  "name": "200",
+                  "value": {
+                    "response": {
+                      "description": "successful operation",
+                      "content": {
+                        "additionalProperties": [
+                          {
+                            "name": "application/json",
+                            "value": {
+                              "schema": {
+                                "schema": {
+                                  "type": "array",
+                                  "items": {
+                                    "schemaOrReference": [
+                                      {
+                                        "reference": {
+                                          "Ref": "#/components/schemas/Pet"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "name": "application/xml",
+                            "value": {
+                              "schema": {
+                                "schema": {
+                                  "type": "array",
+                                  "items": {
+                                    "schemaOrReference": [
+                                      {
+                                        "reference": {
+                                          "Ref": "#/components/schemas/Pet"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
+                {
+                  "name": "400",
+                  "value": {
+                    "response": {
+                      "description": "Invalid tag value"
+                    }
+                  }
+                }
+              ]
+            },
+            "security": [
+              {
+                "additionalProperties": [
+                  {
+                    "name": "petstore_auth",
+                    "value": {
+                      "value": [
+                        "write:pets",
+                        "read:pets"
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "/pet/{petId}",
+        "value": {
+          "get": {
+            "tags": [
+              "pet"
+            ],
+            "summary": "Find pet by ID.",
+            "description": "Returns a single pet.",
+            "operationId": "getPetById",
+            "parameters": [
+              {
+                "parameter": {
+                  "name": "petId",
+                  "in": "path",
+                  "description": "ID of pet to return",
+                  "required": true,
+                  "schema": {
+                    "schema": {
+                      "type": "integer",
+                      "format": "int64"
+                    }
+                  }
+                }
+              }
+            ],
+            "responses": {
+              "default": {
+                "response": {
+                  "description": "Unexpected error"
+                }
+              },
+              "responseOrReference": [
+                {
+                  "name": "200",
+                  "value": {
+                    "response": {
+                      "description": "successful operation",
+                      "content": {
+                        "additionalProperties": [
+                          {
+                            "name": "application/json",
+                            "value": {
+                              "schema": {
+                                "reference": {
+                                  "Ref": "#/components/schemas/Pet"
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "name": "application/xml",
+                            "value": {
+                              "schema": {
+                                "reference": {
+                                  "Ref": "#/components/schemas/Pet"
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
+                {
+                  "name": "400",
+                  "value": {
+                    "response": {
+                      "description": "Invalid ID supplied"
+                    }
+                  }
+                },
+                {
+                  "name": "404",
+                  "value": {
+                    "response": {
+                      "description": "Pet not found"
+                    }
+                  }
+                }
+              ]
+            },
+            "security": [
+              {
+                "additionalProperties": [
+                  {
+                    "name": "api_key",
+                    "value": {}
+                  }
+                ]
+              },
+              {
+                "additionalProperties": [
+                  {
+                    "name": "petstore_auth",
+                    "value": {
+                      "value": [
+                        "write:pets",
+                        "read:pets"
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "post": {
+            "tags": [
+              "pet"
+            ],
+            "summary": "Updates a pet in the store with form data.",
+            "description": "Updates a pet resource based on the form data.",
+            "operationId": "updatePetWithForm",
+            "parameters": [
+              {
+                "parameter": {
+                  "name": "petId",
+                  "in": "path",
+                  "description": "ID of pet that needs to be updated",
+                  "required": true,
+                  "schema": {
+                    "schema": {
+                      "type": "integer",
+                      "format": "int64"
+                    }
+                  }
+                }
+              },
+              {
+                "parameter": {
+                  "name": "name",
+                  "in": "query",
+                  "description": "Name of pet that needs to be updated",
+                  "schema": {
+                    "schema": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              {
+                "parameter": {
+                  "name": "status",
+                  "in": "query",
+                  "description": "Status of pet that needs to be updated",
+                  "schema": {
+                    "schema": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            ],
+            "responses": {
+              "default": {
+                "response": {
+                  "description": "Unexpected error"
+                }
+              },
+              "responseOrReference": [
+                {
+                  "name": "200",
+                  "value": {
+                    "response": {
+                      "description": "successful operation",
+                      "content": {
+                        "additionalProperties": [
+                          {
+                            "name": "application/json",
+                            "value": {
+                              "schema": {
+                                "reference": {
+                                  "Ref": "#/components/schemas/Pet"
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "name": "application/xml",
+                            "value": {
+                              "schema": {
+                                "reference": {
+                                  "Ref": "#/components/schemas/Pet"
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
+                {
+                  "name": "400",
+                  "value": {
+                    "response": {
+                      "description": "Invalid input"
+                    }
+                  }
+                }
+              ]
+            },
+            "security": [
+              {
+                "additionalProperties": [
+                  {
+                    "name": "petstore_auth",
+                    "value": {
+                      "value": [
+                        "write:pets",
+                        "read:pets"
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "delete": {
+            "tags": [
+              "pet"
+            ],
+            "summary": "Deletes a pet.",
+            "description": "Delete a pet.",
+            "operationId": "deletePet",
+            "parameters": [
+              {
+                "parameter": {
+                  "name": "api_key",
+                  "in": "header",
+                  "schema": {
+                    "schema": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              {
+                "parameter": {
+                  "name": "petId",
+                  "in": "path",
+                  "description": "Pet id to delete",
+                  "required": true,
+                  "schema": {
+                    "schema": {
+                      "type": "integer",
+                      "format": "int64"
+                    }
+                  }
+                }
+              }
+            ],
+            "responses": {
+              "default": {
+                "response": {
+                  "description": "Unexpected error"
+                }
+              },
+              "responseOrReference": [
+                {
+                  "name": "200",
+                  "value": {
+                    "response": {
+                      "description": "Pet deleted"
+                    }
+                  }
+                },
+                {
+                  "name": "400",
+                  "value": {
+                    "response": {
+                      "description": "Invalid pet value"
+                    }
+                  }
+                }
+              ]
+            },
+            "security": [
+              {
+                "additionalProperties": [
+                  {
+                    "name": "petstore_auth",
+                    "value": {
+                      "value": [
+                        "write:pets",
+                        "read:pets"
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "/pet/{petId}/uploadImage",
+        "value": {
+          "post": {
+            "tags": [
+              "pet"
+            ],
+            "summary": "Uploads an image.",
+            "description": "Upload image of the pet.",
+            "operationId": "uploadFile",
+            "parameters": [
+              {
+                "parameter": {
+                  "name": "petId",
+                  "in": "path",
+                  "description": "ID of pet to update",
+                  "required": true,
+                  "schema": {
+                    "schema": {
+                      "type": "integer",
+                      "format": "int64"
+                    }
+                  }
+                }
+              },
+              {
+                "parameter": {
+                  "name": "additionalMetadata",
+                  "in": "query",
+                  "description": "Additional Metadata",
+                  "schema": {
+                    "schema": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            ],
+            "requestBody": {
+              "requestBody": {
+                "content": {
+                  "additionalProperties": [
+                    {
+                      "name": "application/octet-stream",
+                      "value": {
+                        "schema": {
+                          "schema": {
+                            "type": "string",
+                            "format": "binary"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            "responses": {
+              "default": {
+                "response": {
+                  "description": "Unexpected error"
+                }
+              },
+              "responseOrReference": [
+                {
+                  "name": "200",
+                  "value": {
+                    "response": {
+                      "description": "successful operation",
+                      "content": {
+                        "additionalProperties": [
+                          {
+                            "name": "application/json",
+                            "value": {
+                              "schema": {
+                                "reference": {
+                                  "Ref": "#/components/schemas/ApiResponse"
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
+                {
+                  "name": "400",
+                  "value": {
+                    "response": {
+                      "description": "No file uploaded"
+                    }
+                  }
+                },
+                {
+                  "name": "404",
+                  "value": {
+                    "response": {
+                      "description": "Pet not found"
+                    }
+                  }
+                }
+              ]
+            },
+            "security": [
+              {
+                "additionalProperties": [
+                  {
+                    "name": "petstore_auth",
+                    "value": {
+                      "value": [
+                        "write:pets",
+                        "read:pets"
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "/store/inventory",
+        "value": {
+          "get": {
+            "tags": [
+              "store"
+            ],
+            "summary": "Returns pet inventories by status.",
+            "description": "Returns a map of status codes to quantities.",
+            "operationId": "getInventory",
+            "responses": {
+              "default": {
+                "response": {
+                  "description": "Unexpected error"
+                }
+              },
+              "responseOrReference": [
+                {
+                  "name": "200",
+                  "value": {
+                    "response": {
+                      "description": "successful operation",
+                      "content": {
+                        "additionalProperties": [
+                          {
+                            "name": "application/json",
+                            "value": {
+                              "schema": {
+                                "schema": {
+                                  "type": "object",
+                                  "additionalProperties": {
+                                    "schemaOrReference": {
+                                      "schema": {
+                                        "type": "integer",
+                                        "format": "int32"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "security": [
+              {
+                "additionalProperties": [
+                  {
+                    "name": "api_key",
+                    "value": {}
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "/store/order",
+        "value": {
+          "post": {
+            "tags": [
+              "store"
+            ],
+            "summary": "Place an order for a pet.",
+            "description": "Place a new order in the store.",
+            "operationId": "placeOrder",
+            "requestBody": {
+              "requestBody": {
+                "content": {
+                  "additionalProperties": [
+                    {
+                      "name": "application/json",
+                      "value": {
+                        "schema": {
+                          "reference": {
+                            "Ref": "#/components/schemas/Order"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "name": "application/xml",
+                      "value": {
+                        "schema": {
+                          "reference": {
+                            "Ref": "#/components/schemas/Order"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "name": "application/x-www-form-urlencoded",
+                      "value": {
+                        "schema": {
+                          "reference": {
+                            "Ref": "#/components/schemas/Order"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            "responses": {
+              "default": {
+                "response": {
+                  "description": "Unexpected error"
+                }
+              },
+              "responseOrReference": [
+                {
+                  "name": "200",
+                  "value": {
+                    "response": {
+                      "description": "successful operation",
+                      "content": {
+                        "additionalProperties": [
+                          {
+                            "name": "application/json",
+                            "value": {
+                              "schema": {
+                                "reference": {
+                                  "Ref": "#/components/schemas/Order"
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
+                {
+                  "name": "400",
+                  "value": {
+                    "response": {
+                      "description": "Invalid input"
+                    }
+                  }
+                },
+                {
+                  "name": "422",
+                  "value": {
+                    "response": {
+                      "description": "Validation exception"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "name": "/store/order/{orderId}",
+        "value": {
+          "get": {
+            "tags": [
+              "store"
+            ],
+            "summary": "Find purchase order by ID.",
+            "description": "For valid response try integer IDs with value <= 5 or > 10. Other values will generate exceptions.",
+            "operationId": "getOrderById",
+            "parameters": [
+              {
+                "parameter": {
+                  "name": "orderId",
+                  "in": "path",
+                  "description": "ID of order that needs to be fetched",
+                  "required": true,
+                  "schema": {
+                    "schema": {
+                      "type": "integer",
+                      "format": "int64"
+                    }
+                  }
+                }
+              }
+            ],
+            "responses": {
+              "default": {
+                "response": {
+                  "description": "Unexpected error"
+                }
+              },
+              "responseOrReference": [
+                {
+                  "name": "200",
+                  "value": {
+                    "response": {
+                      "description": "successful operation",
+                      "content": {
+                        "additionalProperties": [
+                          {
+                            "name": "application/json",
+                            "value": {
+                              "schema": {
+                                "reference": {
+                                  "Ref": "#/components/schemas/Order"
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "name": "application/xml",
+                            "value": {
+                              "schema": {
+                                "reference": {
+                                  "Ref": "#/components/schemas/Order"
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
+                {
+                  "name": "400",
+                  "value": {
+                    "response": {
+                      "description": "Invalid ID supplied"
+                    }
+                  }
+                },
+                {
+                  "name": "404",
+                  "value": {
+                    "response": {
+                      "description": "Order not found"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "delete": {
+            "tags": [
+              "store"
+            ],
+            "summary": "Delete purchase order by identifier.",
+            "description": "For valid response try integer IDs with value < 1000. Anything above 1000 or non-integers will generate API errors.",
+            "operationId": "deleteOrder",
+            "parameters": [
+              {
+                "parameter": {
+                  "name": "orderId",
+                  "in": "path",
+                  "description": "ID of the order that needs to be deleted",
+                  "required": true,
+                  "schema": {
+                    "schema": {
+                      "type": "integer",
+                      "format": "int64"
+                    }
+                  }
+                }
+              }
+            ],
+            "responses": {
+              "default": {
+                "response": {
+                  "description": "Unexpected error"
+                }
+              },
+              "responseOrReference": [
+                {
+                  "name": "200",
+                  "value": {
+                    "response": {
+                      "description": "order deleted"
+                    }
+                  }
+                },
+                {
+                  "name": "400",
+                  "value": {
+                    "response": {
+                      "description": "Invalid ID supplied"
+                    }
+                  }
+                },
+                {
+                  "name": "404",
+                  "value": {
+                    "response": {
+                      "description": "Order not found"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "name": "/user",
+        "value": {
+          "post": {
+            "tags": [
+              "user"
+            ],
+            "summary": "Create user.",
+            "description": "This can only be done by the logged in user.",
+            "operationId": "createUser",
+            "requestBody": {
+              "requestBody": {
+                "description": "Created user object",
+                "content": {
+                  "additionalProperties": [
+                    {
+                      "name": "application/json",
+                      "value": {
+                        "schema": {
+                          "reference": {
+                            "Ref": "#/components/schemas/User"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "name": "application/xml",
+                      "value": {
+                        "schema": {
+                          "reference": {
+                            "Ref": "#/components/schemas/User"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "name": "application/x-www-form-urlencoded",
+                      "value": {
+                        "schema": {
+                          "reference": {
+                            "Ref": "#/components/schemas/User"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            "responses": {
+              "default": {
+                "response": {
+                  "description": "Unexpected error"
+                }
+              },
+              "responseOrReference": [
+                {
+                  "name": "200",
+                  "value": {
+                    "response": {
+                      "description": "successful operation",
+                      "content": {
+                        "additionalProperties": [
+                          {
+                            "name": "application/json",
+                            "value": {
+                              "schema": {
+                                "reference": {
+                                  "Ref": "#/components/schemas/User"
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "name": "application/xml",
+                            "value": {
+                              "schema": {
+                                "reference": {
+                                  "Ref": "#/components/schemas/User"
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "name": "/user/createWithList",
+        "value": {
+          "post": {
+            "tags": [
+              "user"
+            ],
+            "summary": "Creates list of users with given input array.",
+            "description": "Creates list of users with given input array.",
+            "operationId": "createUsersWithListInput",
+            "requestBody": {
+              "requestBody": {
+                "content": {
+                  "additionalProperties": [
+                    {
+                      "name": "application/json",
+                      "value": {
+                        "schema": {
+                          "schema": {
+                            "type": "array",
+                            "items": {
+                              "schemaOrReference": [
+                                {
+                                  "reference": {
+                                    "Ref": "#/components/schemas/User"
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            "responses": {
+              "default": {
+                "response": {
+                  "description": "Unexpected error"
+                }
+              },
+              "responseOrReference": [
+                {
+                  "name": "200",
+                  "value": {
+                    "response": {
+                      "description": "Successful operation",
+                      "content": {
+                        "additionalProperties": [
+                          {
+                            "name": "application/json",
+                            "value": {
+                              "schema": {
+                                "reference": {
+                                  "Ref": "#/components/schemas/User"
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "name": "application/xml",
+                            "value": {
+                              "schema": {
+                                "reference": {
+                                  "Ref": "#/components/schemas/User"
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "name": "/user/login",
+        "value": {
+          "get": {
+            "tags": [
+              "user"
+            ],
+            "summary": "Logs user into the system.",
+            "description": "Log into the system.",
+            "operationId": "loginUser",
+            "parameters": [
+              {
+                "parameter": {
+                  "name": "username",
+                  "in": "query",
+                  "description": "The user name for login",
+                  "schema": {
+                    "schema": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              {
+                "parameter": {
+                  "name": "password",
+                  "in": "query",
+                  "description": "The password for login in clear text",
+                  "schema": {
+                    "schema": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            ],
+            "responses": {
+              "default": {
+                "response": {
+                  "description": "Unexpected error"
+                }
+              },
+              "responseOrReference": [
+                {
+                  "name": "200",
+                  "value": {
+                    "response": {
+                      "description": "successful operation",
+                      "headers": {
+                        "additionalProperties": [
+                          {
+                            "name": "X-Rate-Limit",
+                            "value": {
+                              "header": {
+                                "description": "calls per hour allowed by the user",
+                                "schema": {
+                                  "schema": {
+                                    "type": "integer",
+                                    "format": "int32"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "name": "X-Expires-After",
+                            "value": {
+                              "header": {
+                                "description": "date in UTC when token expires",
+                                "schema": {
+                                  "schema": {
+                                    "type": "string",
+                                    "format": "date-time"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "content": {
+                        "additionalProperties": [
+                          {
+                            "name": "application/xml",
+                            "value": {
+                              "schema": {
+                                "schema": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "name": "application/json",
+                            "value": {
+                              "schema": {
+                                "schema": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
+                {
+                  "name": "400",
+                  "value": {
+                    "response": {
+                      "description": "Invalid username/password supplied"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "name": "/user/logout",
+        "value": {
+          "get": {
+            "tags": [
+              "user"
+            ],
+            "summary": "Logs out current logged in user session.",
+            "description": "Log user out of the system.",
+            "operationId": "logoutUser",
+            "responses": {
+              "default": {
+                "response": {
+                  "description": "Unexpected error"
+                }
+              },
+              "responseOrReference": [
+                {
+                  "name": "200",
+                  "value": {
+                    "response": {
+                      "description": "successful operation"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "name": "/user/{username}",
+        "value": {
+          "get": {
+            "tags": [
+              "user"
+            ],
+            "summary": "Get user by user name.",
+            "description": "Get user detail based on username.",
+            "operationId": "getUserByName",
+            "parameters": [
+              {
+                "parameter": {
+                  "name": "username",
+                  "in": "path",
+                  "description": "The name that needs to be fetched. Use user1 for testing",
+                  "required": true,
+                  "schema": {
+                    "schema": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            ],
+            "responses": {
+              "default": {
+                "response": {
+                  "description": "Unexpected error"
+                }
+              },
+              "responseOrReference": [
+                {
+                  "name": "200",
+                  "value": {
+                    "response": {
+                      "description": "successful operation",
+                      "content": {
+                        "additionalProperties": [
+                          {
+                            "name": "application/json",
+                            "value": {
+                              "schema": {
+                                "reference": {
+                                  "Ref": "#/components/schemas/User"
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "name": "application/xml",
+                            "value": {
+                              "schema": {
+                                "reference": {
+                                  "Ref": "#/components/schemas/User"
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
+                {
+                  "name": "400",
+                  "value": {
+                    "response": {
+                      "description": "Invalid username supplied"
+                    }
+                  }
+                },
+                {
+                  "name": "404",
+                  "value": {
+                    "response": {
+                      "description": "User not found"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "put": {
+            "tags": [
+              "user"
+            ],
+            "summary": "Update user resource.",
+            "description": "This can only be done by the logged in user.",
+            "operationId": "updateUser",
+            "parameters": [
+              {
+                "parameter": {
+                  "name": "username",
+                  "in": "path",
+                  "description": "name that need to be deleted",
+                  "required": true,
+                  "schema": {
+                    "schema": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            ],
+            "requestBody": {
+              "requestBody": {
+                "description": "Update an existent user in the store",
+                "content": {
+                  "additionalProperties": [
+                    {
+                      "name": "application/json",
+                      "value": {
+                        "schema": {
+                          "reference": {
+                            "Ref": "#/components/schemas/User"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "name": "application/xml",
+                      "value": {
+                        "schema": {
+                          "reference": {
+                            "Ref": "#/components/schemas/User"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "name": "application/x-www-form-urlencoded",
+                      "value": {
+                        "schema": {
+                          "reference": {
+                            "Ref": "#/components/schemas/User"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            "responses": {
+              "default": {
+                "response": {
+                  "description": "Unexpected error"
+                }
+              },
+              "responseOrReference": [
+                {
+                  "name": "200",
+                  "value": {
+                    "response": {
+                      "description": "successful operation"
+                    }
+                  }
+                },
+                {
+                  "name": "400",
+                  "value": {
+                    "response": {
+                      "description": "bad request"
+                    }
+                  }
+                },
+                {
+                  "name": "404",
+                  "value": {
+                    "response": {
+                      "description": "user not found"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "delete": {
+            "tags": [
+              "user"
+            ],
+            "summary": "Delete user resource.",
+            "description": "This can only be done by the logged in user.",
+            "operationId": "deleteUser",
+            "parameters": [
+              {
+                "parameter": {
+                  "name": "username",
+                  "in": "path",
+                  "description": "The name that needs to be deleted",
+                  "required": true,
+                  "schema": {
+                    "schema": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            ],
+            "responses": {
+              "default": {
+                "response": {
+                  "description": "Unexpected error"
+                }
+              },
+              "responseOrReference": [
+                {
+                  "name": "200",
+                  "value": {
+                    "response": {
+                      "description": "User deleted"
+                    }
+                  }
+                },
+                {
+                  "name": "400",
+                  "value": {
+                    "response": {
+                      "description": "Invalid username supplied"
+                    }
+                  }
+                },
+                {
+                  "name": "404",
+                  "value": {
+                    "response": {
+                      "description": "User not found"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    ]
+  },
+  "components": {
+    "schemas": {
+      "additionalProperties": [
+        {
+          "name": "Order",
+          "value": {
+            "schema": {
+              "xml": {
+                "name": "order"
+              },
+              "type": "object",
+              "properties": {
+                "additionalProperties": [
+                  {
+                    "name": "id",
+                    "value": {
+                      "schema": {
+                        "example": {
+                          "yaml": "10\n"
+                        },
+                        "type": "integer",
+                        "format": "int64"
+                      }
+                    }
+                  },
+                  {
+                    "name": "petId",
+                    "value": {
+                      "schema": {
+                        "example": {
+                          "yaml": "198772\n"
+                        },
+                        "type": "integer",
+                        "format": "int64"
+                      }
+                    }
+                  },
+                  {
+                    "name": "quantity",
+                    "value": {
+                      "schema": {
+                        "example": {
+                          "yaml": "7\n"
+                        },
+                        "type": "integer",
+                        "format": "int32"
+                      }
+                    }
+                  },
+                  {
+                    "name": "shipDate",
+                    "value": {
+                      "schema": {
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    }
+                  },
+                  {
+                    "name": "status",
+                    "value": {
+                      "schema": {
+                        "example": {
+                          "yaml": "approved\n"
+                        },
+                        "enum": [
+                          {
+                            "yaml": "placed\n"
+                          },
+                          {
+                            "yaml": "approved\n"
+                          },
+                          {
+                            "yaml": "delivered\n"
+                          }
+                        ],
+                        "type": "string",
+                        "description": "Order Status"
+                      }
+                    }
+                  },
+                  {
+                    "name": "complete",
+                    "value": {
+                      "schema": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "name": "Category",
+          "value": {
+            "schema": {
+              "xml": {
+                "name": "category"
+              },
+              "type": "object",
+              "properties": {
+                "additionalProperties": [
+                  {
+                    "name": "id",
+                    "value": {
+                      "schema": {
+                        "example": {
+                          "yaml": "1\n"
+                        },
+                        "type": "integer",
+                        "format": "int64"
+                      }
+                    }
+                  },
+                  {
+                    "name": "name",
+                    "value": {
+                      "schema": {
+                        "example": {
+                          "yaml": "Dogs\n"
+                        },
+                        "type": "string"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "name": "User",
+          "value": {
+            "schema": {
+              "xml": {
+                "name": "user"
+              },
+              "type": "object",
+              "properties": {
+                "additionalProperties": [
+                  {
+                    "name": "id",
+                    "value": {
+                      "schema": {
+                        "example": {
+                          "yaml": "10\n"
+                        },
+                        "type": "integer",
+                        "format": "int64"
+                      }
+                    }
+                  },
+                  {
+                    "name": "username",
+                    "value": {
+                      "schema": {
+                        "example": {
+                          "yaml": "theUser\n"
+                        },
+                        "type": "string"
+                      }
+                    }
+                  },
+                  {
+                    "name": "firstName",
+                    "value": {
+                      "schema": {
+                        "example": {
+                          "yaml": "John\n"
+                        },
+                        "type": "string"
+                      }
+                    }
+                  },
+                  {
+                    "name": "lastName",
+                    "value": {
+                      "schema": {
+                        "example": {
+                          "yaml": "James\n"
+                        },
+                        "type": "string"
+                      }
+                    }
+                  },
+                  {
+                    "name": "email",
+                    "value": {
+                      "schema": {
+                        "example": {
+                          "yaml": "john@email.com\n"
+                        },
+                        "type": "string"
+                      }
+                    }
+                  },
+                  {
+                    "name": "password",
+                    "value": {
+                      "schema": {
+                        "example": {
+                          "yaml": "\"12345\"\n"
+                        },
+                        "type": "string"
+                      }
+                    }
+                  },
+                  {
+                    "name": "phone",
+                    "value": {
+                      "schema": {
+                        "example": {
+                          "yaml": "\"12345\"\n"
+                        },
+                        "type": "string"
+                      }
+                    }
+                  },
+                  {
+                    "name": "userStatus",
+                    "value": {
+                      "schema": {
+                        "example": {
+                          "yaml": "1\n"
+                        },
+                        "type": "integer",
+                        "description": "User Status",
+                        "format": "int32"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "name": "Tag",
+          "value": {
+            "schema": {
+              "xml": {
+                "name": "tag"
+              },
+              "type": "object",
+              "properties": {
+                "additionalProperties": [
+                  {
+                    "name": "id",
+                    "value": {
+                      "schema": {
+                        "type": "integer",
+                        "format": "int64"
+                      }
+                    }
+                  },
+                  {
+                    "name": "name",
+                    "value": {
+                      "schema": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "name": "Pet",
+          "value": {
+            "schema": {
+              "xml": {
+                "name": "pet"
+              },
+              "required": [
+                "name",
+                "photoUrls"
+              ],
+              "type": "object",
+              "properties": {
+                "additionalProperties": [
+                  {
+                    "name": "id",
+                    "value": {
+                      "schema": {
+                        "example": {
+                          "yaml": "10\n"
+                        },
+                        "type": "integer",
+                        "format": "int64"
+                      }
+                    }
+                  },
+                  {
+                    "name": "name",
+                    "value": {
+                      "schema": {
+                        "example": {
+                          "yaml": "doggie\n"
+                        },
+                        "type": "string"
+                      }
+                    }
+                  },
+                  {
+                    "name": "category",
+                    "value": {
+                      "reference": {
+                        "Ref": "#/components/schemas/Category"
+                      }
+                    }
+                  },
+                  {
+                    "name": "photoUrls",
+                    "value": {
+                      "schema": {
+                        "xml": {
+                          "wrapped": true
+                        },
+                        "type": "array",
+                        "items": {
+                          "schemaOrReference": [
+                            {
+                              "schema": {
+                                "xml": {
+                                  "name": "photoUrl"
+                                },
+                                "type": "string"
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "name": "tags",
+                    "value": {
+                      "schema": {
+                        "xml": {
+                          "wrapped": true
+                        },
+                        "type": "array",
+                        "items": {
+                          "schemaOrReference": [
+                            {
+                              "reference": {
+                                "Ref": "#/components/schemas/Tag"
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "name": "status",
+                    "value": {
+                      "schema": {
+                        "enum": [
+                          {
+                            "yaml": "available\n"
+                          },
+                          {
+                            "yaml": "pending\n"
+                          },
+                          {
+                            "yaml": "sold\n"
+                          }
+                        ],
+                        "type": "string",
+                        "description": "pet status in the store"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "name": "ApiResponse",
+          "value": {
+            "schema": {
+              "xml": {
+                "name": "##default"
+              },
+              "type": "object",
+              "properties": {
+                "additionalProperties": [
+                  {
+                    "name": "code",
+                    "value": {
+                      "schema": {
+                        "type": "integer",
+                        "format": "int32"
+                      }
+                    }
+                  },
+                  {
+                    "name": "type",
+                    "value": {
+                      "schema": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  {
+                    "name": "message",
+                    "value": {
+                      "schema": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "requestBodies": {
+      "additionalProperties": [
+        {
+          "name": "Pet",
+          "value": {
+            "requestBody": {
+              "description": "Pet object that needs to be added to the store",
+              "content": {
+                "additionalProperties": [
+                  {
+                    "name": "application/json",
+                    "value": {
+                      "schema": {
+                        "reference": {
+                          "Ref": "#/components/schemas/Pet"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "name": "application/xml",
+                    "value": {
+                      "schema": {
+                        "reference": {
+                          "Ref": "#/components/schemas/Pet"
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "name": "UserArray",
+          "value": {
+            "requestBody": {
+              "description": "List of user object",
+              "content": {
+                "additionalProperties": [
+                  {
+                    "name": "application/json",
+                    "value": {
+                      "schema": {
+                        "schema": {
+                          "type": "array",
+                          "items": {
+                            "schemaOrReference": [
+                              {
+                                "reference": {
+                                  "Ref": "#/components/schemas/User"
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "securitySchemes": {
+      "additionalProperties": [
+        {
+          "name": "petstore_auth",
+          "value": {
+            "securityScheme": {
+              "type": "oauth2",
+              "flows": {
+                "implicit": {
+                  "authorizationUrl": "https://petstore3.swagger.io/oauth/authorize",
+                  "scopes": {
+                    "additionalProperties": [
+                      {
+                        "name": "write:pets",
+                        "value": "modify pets in your account"
+                      },
+                      {
+                        "name": "read:pets",
+                        "value": "read your pets"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "api_key",
+          "value": {
+            "securityScheme": {
+              "type": "apiKey",
+              "name": "api_key",
+              "in": "header"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "tags": [
+    {
+      "name": "pet",
+      "description": "Everything about your Pets",
+      "externalDocs": {
+        "description": "Find out more",
+        "url": "https://swagger.io"
+      }
+    },
+    {
+      "name": "store",
+      "description": "Access to Petstore orders",
+      "externalDocs": {
+        "description": "Find out more about our store",
+        "url": "https://swagger.io"
+      }
+    },
+    {
+      "name": "user",
+      "description": "Operations about user"
+    }
+  ],
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "https://swagger.io"
+  }
+}

@@ -1,0 +1,13 @@
+[package]
+name = "gnostic-extensions"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Extension protocol support for gnostic-models"
+
+[dependencies]
+prost = { workspace = true }
+prost-types = { workspace = true }
+
+[build-dependencies]
+prost-build = { workspace = true }

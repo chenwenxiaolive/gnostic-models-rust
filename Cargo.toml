@@ -1,0 +1,59 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/gnostic-compiler",
+    "crates/gnostic-jsonschema",
+    "crates/gnostic-extensions",
+    "crates/gnostic-openapiv3",
+    "crates/gnostic-openapiv2",
+    "crates/gnostic-discovery",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/google/gnostic-models"
+description = "Protocol buffer models for OpenAPI and related formats"
+
+[workspace.dependencies]
+# Internal crates
+gnostic-compiler = { path = "crates/gnostic-compiler" }
+gnostic-jsonschema = { path = "crates/gnostic-jsonschema" }
+gnostic-extensions = { path = "crates/gnostic-extensions" }
+gnostic-openapiv3 = { path = "crates/gnostic-openapiv3" }
+gnostic-openapiv2 = { path = "crates/gnostic-openapiv2" }
+gnostic-discovery = { path = "crates/gnostic-discovery" }
+
+# Protocol Buffers
+prost = "0.13"
+prost-types = "0.13"
+
+# YAML/JSON processing
+serde = { version = "1.0", features = ["derive"] }
+serde_yaml = "0.9"
+serde_json = "1.0"
+yaml-rust2 = "0.9"
+
+# HTTP client
+reqwest = { version = "0.12", default-features = false, features = ["blocking", "rustls-tls", "json"] }
+
+# Error handling
+thiserror = "2.0"
+anyhow = "1.0"
+
+# URL parsing
+url = "2.5"
+
+# Thread-safe cache
+dashmap = "6"
+once_cell = "1.19"
+
+# Regex
+regex = "1.10"
+
+# Indexmap for ordered maps
+indexmap = { version = "2.0", features = ["serde"] }
+
+[workspace.dependencies.prost-build]
+version = "0.13"

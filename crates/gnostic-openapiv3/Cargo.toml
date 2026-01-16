@@ -1,0 +1,18 @@
+[package]
+name = "gnostic-openapiv3"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "OpenAPI v3 support for gnostic-models"
+
+[dependencies]
+gnostic-compiler = { workspace = true }
+gnostic-extensions = { workspace = true }
+prost = { workspace = true }
+prost-types = { workspace = true }
+yaml-rust2 = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+[build-dependencies]
+prost-build = { workspace = true }
