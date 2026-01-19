@@ -294,6 +294,7 @@ dependencies = [
 name = "gnostic-jsonschema"
 version = "0.1.0"
 dependencies = [
+ "base64",
  "gnostic-compiler",
  "indexmap",
  "serde",

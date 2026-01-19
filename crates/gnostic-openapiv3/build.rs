@@ -9,7 +9,10 @@ fn main() -> Result<()> {
         .unwrap()
         .join("proto");
 
-    let proto_files = &[proto_root.join("openapiv3.proto")];
+    let proto_files = &[
+        proto_root.join("openapiv3.proto"),
+        proto_root.join("annotations.proto"),
+    ];
 
     let include_dirs = &[proto_root.clone()];
 
