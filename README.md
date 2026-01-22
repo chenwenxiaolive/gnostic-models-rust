@@ -152,7 +152,7 @@ cargo test -p gnostic-discovery
 ```
 
 Test coverage:
-- 23 unit tests (gnostic-compiler)
+- 29 unit tests (gnostic-compiler)
 - 10 integration tests (OpenAPI v3, v2, Discovery)
 
 ## Compatibility
