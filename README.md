@@ -169,6 +169,10 @@ This implementation aims to be compatible with the Go [gnostic-models](https://g
 
 Apache License 2.0 - See [LICENSE](LICENSE) for details.
 
+## Contributing
+
+Contributions are welcome! Please feel free to submit issues and pull requests.
+
 ## Acknowledgments
 
 - Original [gnostic-models](https://github.com/google/gnostic-models) project by Google
