@@ -118,10 +118,10 @@ gnostic-models-rust/
 ## Dependencies
 
 - **prost** - Protocol Buffer implementation
-- **yaml-rust2** - YAML parsing
+- **serde_yaml** - YAML parsing
 - **serde / serde_json** - JSON serialization
-- **reqwest** - HTTP client for URL fetching
-- **dashmap** - Thread-safe caching
+- **hyper** - HTTP client for URL fetching
+- **parking_lot** - Thread-safe caching
 - **thiserror** - Error handling
 
 ## Building
