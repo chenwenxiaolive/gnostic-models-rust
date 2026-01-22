@@ -1,5 +1,8 @@
 # gnostic-models-rust
 
+[![Rust](https://img.shields.io/badge/rust-1.70%2B-orange.svg)](https://www.rust-lang.org/)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+
 Rust implementation of [gnostic-models](https://github.com/google/gnostic-models) - Protocol Buffer models for OpenAPI and related formats.
 
 ## Overview
