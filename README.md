@@ -138,6 +138,9 @@ cargo test
 
 # Build in release mode
 cargo build --release
+
+# Check code without building
+cargo check
 ```
 
 ## Testing
