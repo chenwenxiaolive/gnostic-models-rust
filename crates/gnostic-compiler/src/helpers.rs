@@ -15,16 +15,16 @@
 //! Helper functions for YAML node manipulation.
 
 use regex::Regex;
-use yaml_rust2::Yaml;
+use serde_yaml::Value as Yaml;
 
 /// Checks if a YAML node is a mapping (map/object).
 pub fn is_mapping(node: &Yaml) -> bool {
-    matches!(node, Yaml::Hash(_))
+    matches!(node, Yaml::Mapping(_))
 }
 
 /// Checks if a YAML node is a sequence (array).
 pub fn is_sequence(node: &Yaml) -> bool {
-    matches!(node, Yaml::Array(_))
+    matches!(node, Yaml::Sequence(_))
 }
 
 /// Checks if a YAML node is a scalar value.
@@ -32,17 +32,16 @@ pub fn is_scalar(node: &Yaml) -> bool {
     matches!(
         node,
         Yaml::String(_)
-            | Yaml::Integer(_)
-            | Yaml::Real(_)
-            | Yaml::Boolean(_)
+            | Yaml::Number(_)
+            | Yaml::Bool(_)
             | Yaml::Null
     )
 }
 
-/// Unpacks a YAML node if it's a mapping, returning a reference to the hash.
-pub fn unpack_map(node: &Yaml) -> Option<&yaml_rust2::yaml::Hash> {
+/// Unpacks a YAML node if it's a mapping, returning a reference to the mapping.
+pub fn unpack_map(node: &Yaml) -> Option<&serde_yaml::Mapping> {
     match node {
-        Yaml::Hash(h) => Some(h),
+        Yaml::Mapping(m) => Some(m),
         _ => None,
     }
 }
@@ -50,7 +49,7 @@ pub fn unpack_map(node: &Yaml) -> Option<&yaml_rust2::yaml::Hash> {
 /// Returns sorted keys from a YAML mapping node.
 pub fn sorted_keys_for_map(node: &Yaml) -> Vec<String> {
     let mut keys = Vec::new();
-    if let Yaml::Hash(map) = node {
+    if let Yaml::Mapping(map) = node {
         for key in map.keys() {
             if let Yaml::String(s) = key {
                 keys.push(s.clone());
@@ -63,7 +62,7 @@ pub fn sorted_keys_for_map(node: &Yaml) -> Vec<String> {
 
 /// Checks if a YAML mapping contains a specific key.
 pub fn map_has_key(node: &Yaml, key: &str) -> bool {
-    if let Yaml::Hash(map) = node {
+    if let Yaml::Mapping(map) = node {
         map.contains_key(&Yaml::String(key.to_string()))
     } else {
         false
@@ -72,7 +71,7 @@ pub fn map_has_key(node: &Yaml, key: &str) -> bool {
 
 /// Gets the value for a specific key from a YAML mapping.
 pub fn map_value_for_key<'a>(node: &'a Yaml, key: &str) -> Option<&'a Yaml> {
-    if let Yaml::Hash(map) = node {
+    if let Yaml::Mapping(map) = node {
         map.get(&Yaml::String(key.to_string()))
     } else {
         None
@@ -82,7 +81,7 @@ pub fn map_value_for_key<'a>(node: &'a Yaml, key: &str) -> Option<&'a Yaml> {
 /// Gets a sequence node if the node is a sequence.
 pub fn sequence_node_for_node(node: &Yaml) -> Option<&Vec<Yaml>> {
     match node {
-        Yaml::Array(arr) => Some(arr),
+        Yaml::Sequence(arr) => Some(arr),
         _ => None,
     }
 }
@@ -90,7 +89,7 @@ pub fn sequence_node_for_node(node: &Yaml) -> Option<&Vec<Yaml>> {
 /// Gets a boolean value from a scalar node.
 pub fn bool_for_scalar_node(node: &Yaml) -> Option<bool> {
     match node {
-        Yaml::Boolean(b) => Some(*b),
+        Yaml::Bool(b) => Some(*b),
         _ => None,
     }
 }
@@ -98,7 +97,7 @@ pub fn bool_for_scalar_node(node: &Yaml) -> Option<bool> {
 /// Gets an integer value from a scalar node.
 pub fn int_for_scalar_node(node: &Yaml) -> Option<i64> {
     match node {
-        Yaml::Integer(i) => Some(*i),
+        Yaml::Number(n) => n.as_i64(),
         _ => None,
     }
 }
@@ -106,8 +105,7 @@ pub fn int_for_scalar_node(node: &Yaml) -> Option<i64> {
 /// Gets a float value from a scalar node.
 pub fn float_for_scalar_node(node: &Yaml) -> Option<f64> {
     match node {
-        Yaml::Real(s) => s.parse().ok(),
-        Yaml::Integer(i) => Some(*i as f64),
+        Yaml::Number(n) => n.as_f64(),
         _ => None,
     }
 }
@@ -116,9 +114,16 @@ pub fn float_for_scalar_node(node: &Yaml) -> Option<f64> {
 pub fn string_for_scalar_node(node: &Yaml) -> Option<String> {
     match node {
         Yaml::String(s) => Some(s.clone()),
-        Yaml::Integer(i) => Some(i.to_string()),
-        Yaml::Real(r) => Some(r.clone()),
-        Yaml::Boolean(b) => Some(b.to_string()),
+        Yaml::Number(n) => {
+            if let Some(i) = n.as_i64() {
+                Some(i.to_string())
+            } else if let Some(f) = n.as_f64() {
+                Some(f.to_string())
+            } else {
+                None
+            }
+        }
+        Yaml::Bool(b) => Some(b.to_string()),
         Yaml::Null => Some(String::new()),
         _ => None,
     }
@@ -127,7 +132,7 @@ pub fn string_for_scalar_node(node: &Yaml) -> Option<String> {
 /// Converts a sequence node to an array of strings.
 pub fn string_array_for_sequence_node(node: &Yaml) -> Vec<String> {
     let mut strings = Vec::new();
-    if let Yaml::Array(arr) = node {
+    if let Yaml::Sequence(arr) = node {
         for item in arr {
             if let Some(s) = string_for_scalar_node(item) {
                 strings.push(s);
@@ -155,7 +160,7 @@ pub fn invalid_keys_in_map(
     allowed_patterns: &[&Regex],
 ) -> Vec<String> {
     let mut invalid = Vec::new();
-    if let Yaml::Hash(map) = node {
+    if let Yaml::Mapping(map) = node {
         for key in map.keys() {
             if let Yaml::String(key_str) = key {
                 let mut found = false;
@@ -191,12 +196,12 @@ pub fn new_null_node() -> Yaml {
 
 /// Creates a new mapping (hash) YAML node.
 pub fn new_mapping_node() -> Yaml {
-    Yaml::Hash(yaml_rust2::yaml::Hash::new())
+    Yaml::Mapping(serde_yaml::Mapping::new())
 }
 
 /// Creates a new sequence (array) YAML node.
 pub fn new_sequence_node() -> Yaml {
-    Yaml::Array(Vec::new())
+    Yaml::Sequence(Vec::new())
 }
 
 /// Creates a new string scalar node.
@@ -206,22 +211,22 @@ pub fn new_scalar_node_for_string(s: impl Into<String>) -> Yaml {
 
 /// Creates a new sequence node from a string array.
 pub fn new_sequence_node_for_string_array(strings: &[String]) -> Yaml {
-    Yaml::Array(strings.iter().map(|s| Yaml::String(s.clone())).collect())
+    Yaml::Sequence(strings.iter().map(|s| Yaml::String(s.clone())).collect())
 }
 
 /// Creates a new boolean scalar node.
 pub fn new_scalar_node_for_bool(b: bool) -> Yaml {
-    Yaml::Boolean(b)
+    Yaml::Bool(b)
 }
 
 /// Creates a new float scalar node.
 pub fn new_scalar_node_for_float(f: f64) -> Yaml {
-    Yaml::Real(f.to_string())
+    Yaml::Number(serde_yaml::Number::from(f))
 }
 
 /// Creates a new integer scalar node.
 pub fn new_scalar_node_for_int(i: i64) -> Yaml {
-    Yaml::Integer(i)
+    Yaml::Number(serde_yaml::Number::from(i))
 }
 
 /// Returns "property" or "properties" based on count.
@@ -249,24 +254,27 @@ pub fn string_array_contains_values(array: &[String], values: &[&str]) -> bool {
 pub fn display(node: &Yaml) -> String {
     match node {
         Yaml::String(s) => format!("{} (string)", s),
-        Yaml::Integer(i) => format!("{} (integer)", i),
-        Yaml::Real(r) => format!("{} (float)", r),
-        Yaml::Boolean(b) => format!("{} (boolean)", b),
+        Yaml::Number(n) => {
+            if n.is_i64() {
+                format!("{} (integer)", n)
+            } else {
+                format!("{} (float)", n)
+            }
+        }
+        Yaml::Bool(b) => format!("{} (boolean)", b),
         Yaml::Null => "null".to_string(),
-        Yaml::Array(_) => "[array]".to_string(),
-        Yaml::Hash(_) => "{object}".to_string(),
+        Yaml::Sequence(_) => "[array]".to_string(),
+        Yaml::Mapping(_) => "{object}".to_string(),
         _ => format!("{:?}", node),
     }
 }
 
 /// Marshals a YAML node to bytes.
 pub fn marshal(node: &Yaml) -> Vec<u8> {
-    let mut out_str = String::new();
-    {
-        let mut emitter = yaml_rust2::YamlEmitter::new(&mut out_str);
-        let _ = emitter.dump(node);
+    match serde_yaml::to_string(node) {
+        Ok(s) => s.into_bytes(),
+        Err(_) => Vec::new(),
     }
-    out_str.into_bytes()
 }
 
 /// Iterates over key-value pairs in a YAML mapping.
@@ -274,7 +282,7 @@ pub fn iter_map<F>(node: &Yaml, mut f: F)
 where
     F: FnMut(&str, &Yaml),
 {
-    if let Yaml::Hash(map) = node {
+    if let Yaml::Mapping(map) = node {
         for (key, value) in map {
             if let Yaml::String(key_str) = key {
                 f(key_str, value);
@@ -288,7 +296,7 @@ pub fn iter_sequence<F>(node: &Yaml, mut f: F)
 where
     F: FnMut(usize, &Yaml),
 {
-    if let Yaml::Array(arr) = node {
+    if let Yaml::Sequence(arr) = node {
         for (i, item) in arr.iter().enumerate() {
             f(i, item);
         }
@@ -298,10 +306,9 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
-    use yaml_rust2::YamlLoader;
 
     fn parse_yaml(s: &str) -> Yaml {
-        YamlLoader::load_from_str(s).unwrap().remove(0)
+        serde_yaml::from_str(s).unwrap()
     }
 
     #[test]

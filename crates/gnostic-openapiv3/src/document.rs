@@ -2,7 +2,7 @@
 
 use gnostic_compiler::{Context, ErrorGroup, read_info_from_bytes, read_bytes_for_file};
 use std::sync::Arc;
-use yaml_rust2::Yaml;
+use serde_yaml::Value as Yaml;
 
 use crate::openapi_v3::Document;
 use crate::parser::Parser;
@@ -13,7 +13,7 @@ pub fn parse_document(bytes: &[u8]) -> Result<Document, ErrorGroup> {
         .map_err(|e| ErrorGroup::new(vec![e.into()]))?;
 
     // Handle document node wrapper
-    let node = if let Yaml::Array(ref content) = yaml {
+    let node = if let Yaml::Sequence(ref content) = yaml {
         if content.len() == 1 {
             &content[0]
         } else {

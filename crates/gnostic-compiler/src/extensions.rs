@@ -16,10 +16,10 @@
 
 use crate::context::Context;
 use crate::error::{CompilerError, Result};
+use serde_yaml::Value as Yaml;
 use std::io::Write;
 use std::process::{Command, Stdio};
 use std::sync::Arc;
-use yaml_rust2::Yaml;
 
 /// ExtensionHandler describes a binary that is called by the compiler to handle specification extensions.
 #[derive(Debug, Clone)]
@@ -41,11 +41,8 @@ impl ExtensionHandler {
         }
 
         // Serialize the YAML node
-        let mut yaml_str = String::new();
-        {
-            let mut emitter = yaml_rust2::YamlEmitter::new(&mut yaml_str);
-            let _ = emitter.dump(node);
-        }
+        let yaml_str = serde_yaml::to_string(node)
+            .map_err(|e| CompilerError::Yaml(format!("Failed to serialize YAML: {}", e)))?;
 
         // Build request (simplified - in real implementation this would use protobuf)
         // For now, we'll pass YAML directly and expect YAML back

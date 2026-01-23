@@ -15,18 +15,19 @@
 //! File and HTTP reading with caching support.
 
 use crate::error::{CompilerError, Result};
-use dashmap::DashMap;
 use once_cell::sync::Lazy;
+use parking_lot::RwLock;
+use serde_yaml::Value as Yaml;
+use std::collections::HashMap;
 use std::path::Path;
 use std::sync::atomic::{AtomicBool, Ordering};
 use url::Url;
-use yaml_rust2::{Yaml, YamlLoader};
 
 /// Global file cache (thread-safe).
-static FILE_CACHE: Lazy<DashMap<String, Vec<u8>>> = Lazy::new(DashMap::new);
+static FILE_CACHE: Lazy<RwLock<HashMap<String, Vec<u8>>>> = Lazy::new(|| RwLock::new(HashMap::new()));
 
 /// Global parsed YAML cache (thread-safe).
-static INFO_CACHE: Lazy<DashMap<String, Yaml>> = Lazy::new(DashMap::new);
+static INFO_CACHE: Lazy<RwLock<HashMap<String, Yaml>>> = Lazy::new(|| RwLock::new(HashMap::new()));
 
 /// File cache enabled flag.
 static FILE_CACHE_ENABLED: AtomicBool = AtomicBool::new(true);
@@ -65,25 +66,25 @@ pub fn set_verbose_reader(verbose: bool) {
 /// Removes an entry from the file cache.
 pub fn remove_from_file_cache(fileurl: &str) {
     if FILE_CACHE_ENABLED.load(Ordering::SeqCst) {
-        FILE_CACHE.remove(fileurl);
+        FILE_CACHE.write().remove(fileurl);
     }
 }
 
 /// Removes an entry from the info cache.
 pub fn remove_from_info_cache(filename: &str) {
     if INFO_CACHE_ENABLED.load(Ordering::SeqCst) {
-        INFO_CACHE.remove(filename);
+        INFO_CACHE.write().remove(filename);
     }
 }
 
 /// Clears the file cache.
 pub fn clear_file_cache() {
-    FILE_CACHE.clear();
+    FILE_CACHE.write().clear();
 }
 
 /// Clears the info cache.
 pub fn clear_info_cache() {
-    INFO_CACHE.clear();
+    INFO_CACHE.write().clear();
 }
 
 /// Clears all caches.
@@ -92,14 +93,19 @@ pub fn clear_caches() {
     clear_info_cache();
 }
 
-/// Fetches a file from a URL.
+/// Fetches a URL asynchronously (public API for use by other crates).
+pub async fn fetch_url(url_str: &str) -> Result<Vec<u8>> {
+    fetch_url_async(url_str).await
+}
+
+/// Fetches a file from a URL using hyper.
 pub fn fetch_file(fileurl: &str) -> Result<Vec<u8>> {
     let cache_enabled = FILE_CACHE_ENABLED.load(Ordering::SeqCst);
     let verbose = VERBOSE_READER.load(Ordering::SeqCst);
 
     // Check cache first
     if cache_enabled {
-        if let Some(bytes) = FILE_CACHE.get(fileurl) {
+        if let Some(bytes) = FILE_CACHE.read().get(fileurl) {
             if verbose {
                 log::info!("Cache hit {}", fileurl);
             }
@@ -110,29 +116,78 @@ pub fn fetch_file(fileurl: &str) -> Result<Vec<u8>> {
         }
     }
 
-    // Fetch from URL
-    let response = reqwest::blocking::get(fileurl)
-        .map_err(|e| CompilerError::Http(format!("Failed to fetch {}: {}", fileurl, e)))?;
+    // Use tokio runtime for async HTTP request
+    let runtime = tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()
+        .map_err(|e| CompilerError::Http(format!("Failed to create runtime: {}", e)))?;
+
+    let bytes = runtime.block_on(async {
+        fetch_url_async(fileurl).await
+    })?;
+
+    // Store in cache
+    if cache_enabled {
+        FILE_CACHE.write().insert(fileurl.to_string(), bytes.clone());
+    }
+
+    Ok(bytes)
+}
+
+/// Async function to fetch URL using hyper (HTTP only).
+async fn fetch_http(url_str: &str, uri: http::Uri, host: String) -> Result<Vec<u8>> {
+    use hyper::{Body, Client, Request};
+    use hyper::client::HttpConnector;
+
+    // Create HTTP client
+    let client: Client<HttpConnector, Body> = Client::new();
+
+    let req = Request::builder()
+        .uri(uri)
+        .header("Host", host)
+        .header("User-Agent", "gnostic-compiler/0.1.0")
+        .body(Body::empty())
+        .map_err(|e| CompilerError::Http(format!("Failed to build request: {}", e)))?;
+
+    let response = client.request(req).await
+        .map_err(|e| CompilerError::Http(format!("Failed to fetch {}: {}", url_str, e)))?;
 
     if !response.status().is_success() {
         return Err(CompilerError::Http(format!(
             "Error downloading {}: {}",
-            fileurl,
+            url_str,
             response.status()
         )));
     }
 
-    let bytes = response
-        .bytes()
-        .map_err(|e| CompilerError::Http(format!("Failed to read response body: {}", e)))?
-        .to_vec();
+    let body_bytes = hyper::body::to_bytes(response.into_body()).await
+        .map_err(|e| CompilerError::Http(format!("Failed to read response body: {}", e)))?;
 
-    // Store in cache
-    if cache_enabled {
-        FILE_CACHE.insert(fileurl.to_string(), bytes.clone());
+    Ok(body_bytes.to_vec())
+}
+
+/// Async function to fetch URL using hyper.
+async fn fetch_url_async(url_str: &str) -> Result<Vec<u8>> {
+    use http::Uri;
+
+    let uri: Uri = url_str.parse()
+        .map_err(|e| CompilerError::Http(format!("Invalid URL {}: {}", url_str, e)))?;
+
+    let host = uri.host()
+        .ok_or_else(|| CompilerError::Http(format!("No host in URL: {}", url_str)))?
+        .to_string();
+
+    let scheme = uri.scheme_str().unwrap_or("http");
+
+    if scheme == "https" {
+        // HTTPS not supported without additional dependencies
+        return Err(CompilerError::Http(format!(
+            "HTTPS URLs are not supported. Please download the file locally first: {}",
+            url_str
+        )));
     }
 
-    Ok(bytes)
+    fetch_http(url_str, uri, host).await
 }
 
 /// Reads bytes from a file (local or URL).
@@ -155,7 +210,7 @@ pub fn read_info_from_bytes(filename: &str, bytes: &[u8]) -> Result<Yaml> {
 
     // Check cache first
     if cache_enabled && !filename.is_empty() {
-        if let Some(info) = INFO_CACHE.get(filename) {
+        if let Some(info) = INFO_CACHE.read().get(filename) {
             if verbose {
                 log::info!("Cache hit info for file {}", filename);
             }
@@ -170,12 +225,11 @@ pub fn read_info_from_bytes(filename: &str, bytes: &[u8]) -> Result<Yaml> {
     let content = std::str::from_utf8(bytes)
         .map_err(|e| CompilerError::Yaml(format!("Invalid UTF-8: {}", e)))?;
 
-    let docs = YamlLoader::load_from_str(content)?;
-    let yaml = docs.into_iter().next().unwrap_or(Yaml::Null);
+    let yaml: Yaml = serde_yaml::from_str(content)?;
 
     // Store in cache
     if cache_enabled && !filename.is_empty() {
-        INFO_CACHE.insert(filename.to_string(), yaml.clone());
+        INFO_CACHE.write().insert(filename.to_string(), yaml.clone());
     }
 
     Ok(yaml)
@@ -194,7 +248,7 @@ pub fn read_info_for_ref(basefile: &str, reference: &str) -> Result<Yaml> {
 
     // Check cache first
     if cache_enabled {
-        if let Some(info) = INFO_CACHE.get(reference) {
+        if let Some(info) = INFO_CACHE.read().get(reference) {
             if verbose {
                 log::info!("Cache hit for ref {}#{}", basefile, reference);
             }
@@ -231,25 +285,19 @@ pub fn read_info_for_ref(basefile: &str, reference: &str) -> Result<Yaml> {
     let bytes = read_bytes_for_file(&filename)?;
     let mut info = read_info_from_bytes(&filename, &bytes)?;
 
-    // Handle document node
-    if let Yaml::Array(ref content) = info {
-        if content.len() == 1 {
-            info = content[0].clone();
-        }
-    }
-
+    // Handle document node (serde_yaml returns single value, not array)
     // Navigate to the referenced path
     if parts.len() > 1 && !parts[1].is_empty() {
         let path: Vec<&str> = parts[1].split('/').collect();
         for (i, key) in path.iter().enumerate() {
             if i > 0 && !key.is_empty() {
                 // Skip empty keys (from leading /)
-                if let Yaml::Hash(ref map) = info {
+                if let Yaml::Mapping(ref map) = info {
                     if let Some(value) = map.get(&Yaml::String((*key).to_string())) {
                         info = value.clone();
                     } else {
                         if cache_enabled {
-                            INFO_CACHE.insert(reference.to_string(), Yaml::Null);
+                            INFO_CACHE.write().insert(reference.to_string(), Yaml::Null);
                         }
                         return Err(CompilerError::Simple(format!(
                             "could not resolve {}",
@@ -268,7 +316,7 @@ pub fn read_info_for_ref(basefile: &str, reference: &str) -> Result<Yaml> {
 
     // Store in cache
     if cache_enabled {
-        INFO_CACHE.insert(reference.to_string(), info.clone());
+        INFO_CACHE.write().insert(reference.to_string(), info.clone());
     }
 
     Ok(info)
@@ -306,6 +354,6 @@ mod tests {
         assert!(result.is_ok());
 
         let yaml = result.unwrap();
-        assert!(matches!(yaml, Yaml::Hash(_)));
+        assert!(matches!(yaml, Yaml::Mapping(_)));
     }
 }

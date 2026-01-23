@@ -25,35 +25,37 @@ gnostic-openapiv3 = { path = "crates/gnostic-openapiv3" }
 gnostic-openapiv2 = { path = "crates/gnostic-openapiv2" }
 gnostic-discovery = { path = "crates/gnostic-discovery" }
 
-# Protocol Buffers
-prost = "0.13"
-prost-types = "0.13"
+# Protocol Buffers (company approved)
+prost = "0.12"
+prost-types = "0.12"
 
-# YAML/JSON processing
-serde = { version = "1.0", features = ["derive"] }
+# YAML/JSON processing (company approved)
+serde = { version = "1.0.197", features = ["derive"] }
 serde_yaml = "0.9"
-serde_json = "1.0"
-yaml-rust2 = "0.9"
+serde_json = "1.0.114"
 
-# HTTP client
-reqwest = { version = "0.12", default-features = false, features = ["blocking", "rustls-tls", "json"] }
+# HTTP/Network (company approved)
+hyper = { version = "=0.14.30", features = ["full"] }
+http = "0.2.12"
 
-# Error handling
-thiserror = "2.0"
-anyhow = "1.0"
+# Async runtime (company approved)
+tokio = { version = "=1.39.2", features = ["full"] }
 
-# URL parsing
-url = "2.5"
+# Error handling (company approved)
+thiserror = { version = "1.0.49" }
 
-# Thread-safe cache
-dashmap = "6"
-once_cell = "1.19"
+# URL parsing (company approved)
+url = { version = "2.5.4" }
 
-# Regex
-regex = "1.10"
+# Concurrency utilities (company approved)
+once_cell = "1.19.0"
+parking_lot = "0.12.3"
 
-# Indexmap for ordered maps
-indexmap = { version = "2.0", features = ["serde"] }
+# Regex (company approved)
+regex = { version = "1.10.2" }
+
+# Logging (company approved)
+log = "0.4.22"
 
 [workspace.dependencies.prost-build]
-version = "0.13"
+version = "0.12"

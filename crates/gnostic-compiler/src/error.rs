@@ -163,8 +163,8 @@ impl From<std::io::Error> for CompilerError {
     }
 }
 
-impl From<yaml_rust2::ScanError> for CompilerError {
-    fn from(err: yaml_rust2::ScanError) -> Self {
+impl From<serde_yaml::Error> for CompilerError {
+    fn from(err: serde_yaml::Error) -> Self {
         CompilerError::Yaml(err.to_string())
     }
 }

@@ -238,9 +238,9 @@ mod tests {
 
     #[test]
     fn test_schema_with_properties() {
-        use indexmap::IndexMap;
+        use std::collections::HashMap;
 
-        let mut properties = IndexMap::new();
+        let mut properties = HashMap::new();
         properties.insert("name".to_string(), Schema {
             type_value: Some(StringOrStringArray::String("string".to_string())),
             ..Default::default()

@@ -3,7 +3,7 @@
 use gnostic_compiler::{Context, CompilerError, ErrorGroup};
 use gnostic_compiler::{map_value_for_key, string_for_scalar_node, is_mapping};
 use std::sync::Arc;
-use yaml_rust2::Yaml;
+use serde_yaml::Value as Yaml;
 
 use crate::discovery::*;
 

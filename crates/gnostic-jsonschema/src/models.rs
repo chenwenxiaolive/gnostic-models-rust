@@ -1,6 +1,6 @@
 //! JSON Schema data structures.
 
-use indexmap::IndexMap;
+use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
 
 /// Represents a JSON Schema number (can be integer or float).
@@ -140,19 +140,19 @@ pub struct Schema {
 
     /// Property definitions.
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub definitions: Option<IndexMap<String, Schema>>,
+    pub definitions: Option<HashMap<String, Schema>>,
 
     /// Properties schema.
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub properties: Option<IndexMap<String, Schema>>,
+    pub properties: Option<HashMap<String, Schema>>,
 
     /// Pattern properties schema.
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub pattern_properties: Option<IndexMap<String, Schema>>,
+    pub pattern_properties: Option<HashMap<String, Schema>>,
 
     /// Dependencies.
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub dependencies: Option<IndexMap<String, SchemaOrStringArray>>,
+    pub dependencies: Option<HashMap<String, SchemaOrStringArray>>,
 
     /// Enumeration of allowed values.
     #[serde(rename = "enum", skip_serializing_if = "Option::is_none")]

@@ -3,8 +3,8 @@
 use gnostic_compiler::{Context, CompilerError, ErrorGroup};
 use gnostic_compiler::{map_value_for_key, string_for_scalar_node, bool_for_scalar_node,
                        string_array_for_sequence_node, is_mapping, iter_map};
+use serde_yaml::Value as Yaml;
 use std::sync::Arc;
-use yaml_rust2::Yaml;
 
 use crate::openapi_v3::*;
 
@@ -40,7 +40,7 @@ impl Parser {
 
         // Parse servers
         if let Some(v) = map_value_for_key(node, "servers") {
-            if let Yaml::Array(arr) = v {
+            if let Yaml::Sequence(arr) = v {
                 for (i, item) in arr.iter().enumerate() {
                     let child_ctx = Arc::new(context.child(format!("servers[{}]", i)));
                     match Self::parse_server(item, &child_ctx) {
@@ -71,7 +71,7 @@ impl Parser {
 
         // Parse tags
         if let Some(v) = map_value_for_key(node, "tags") {
-            if let Yaml::Array(arr) = v {
+            if let Yaml::Sequence(arr) = v {
                 for (i, item) in arr.iter().enumerate() {
                     let child_ctx = Arc::new(context.child(format!("tags[{}]", i)));
                     match Self::parse_tag(item, &child_ctx) {

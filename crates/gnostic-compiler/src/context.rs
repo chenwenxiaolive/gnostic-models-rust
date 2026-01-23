@@ -16,7 +16,7 @@
 
 use crate::extensions::ExtensionHandler;
 use std::sync::Arc;
-use yaml_rust2::Yaml;
+use serde_yaml::Value as Yaml;
 
 /// Context contains state of the compiler as it traverses a document.
 #[derive(Debug, Clone)]
@@ -113,11 +113,11 @@ impl Context {
     }
 }
 
-/// Extracts line and column from a yaml-rust2 node marker if available.
-/// Note: yaml-rust2 doesn't directly provide line/column info in the same way as Go's yaml.v3,
+/// Extracts line and column from a serde_yaml node if available.
+/// Note: serde_yaml doesn't directly provide line/column info in the same way as Go's yaml.v3,
 /// so this function is a placeholder for future enhancement.
 pub fn position_from_yaml(_node: &Yaml) -> (Option<usize>, Option<usize>) {
-    // yaml-rust2 doesn't provide position information by default
+    // serde_yaml doesn't provide position information by default
     // This could be enhanced with a custom parser or different YAML library
     (None, None)
 }

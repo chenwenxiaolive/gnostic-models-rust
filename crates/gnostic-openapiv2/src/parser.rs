@@ -5,7 +5,7 @@ use gnostic_compiler::{map_value_for_key, string_for_scalar_node, bool_for_scala
                        string_array_for_sequence_node,
                        is_mapping, is_sequence, iter_map, iter_sequence};
 use std::sync::Arc;
-use yaml_rust2::Yaml;
+use serde_yaml::Value as Yaml;
 
 use crate::openapi_v2::*;
 

@@ -44,20 +44,25 @@ pub struct Api {
 }
 
 impl ApiList {
-    /// Fetches the list of APIs from the Discovery Service.
-    pub fn fetch() -> Result<Self, String> {
-        let response = reqwest::blocking::get(APIS_LIST_SERVICE_URL)
+    /// Fetches the list of APIs from the Discovery Service asynchronously.
+    pub async fn fetch_async() -> Result<Self, String> {
+        use gnostic_compiler::fetch_url;
+
+        let bytes = fetch_url(APIS_LIST_SERVICE_URL)
+            .await
             .map_err(|e| format!("Failed to fetch API list: {}", e))?;
 
-        if !response.status().is_success() {
-            return Err(format!("HTTP error: {}", response.status()));
-        }
+        serde_json::from_slice(&bytes)
+            .map_err(|e| format!("Failed to parse API list: {}", e))
+    }
 
-        let list: ApiList = response
-            .json()
-            .map_err(|e| format!("Failed to parse API list: {}", e))?;
-
-        Ok(list)
+    /// Fetches the list of APIs from the Discovery Service (blocking).
+    /// Note: This requires a tokio runtime to be available.
+    pub fn fetch() -> Result<Self, String> {
+        // Create a new runtime for blocking call
+        let rt = tokio::runtime::Runtime::new()
+            .map_err(|e| format!("Failed to create runtime: {}", e))?;
+        rt.block_on(Self::fetch_async())
     }
 
     /// Parses the API list from JSON bytes.
